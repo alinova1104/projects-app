@@ -1,30 +1,106 @@
-# Desktop uygulama tasarlama
+# Proje Yöneticisi
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+Modern ve şık bir proje yönetimi uygulaması. Web uygulaması olarak çalışır ve PHP API ile veri alışverişi yapar.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/nova1104alia-gmailcoms-projects/v0-desktop-uygulama-tasarlama)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/JbQhSvRjUg5)
+## Özellikler
 
-## Overview
+- ✅ Modern ve responsive tasarım
+- ✅ PHP API ile veri yönetimi
+- ✅ MySQL veritabanı desteği
+- ✅ CRUD operasyonları (Oluştur, Oku, Güncelle, Sil)
+- ✅ Proje durumu ve öncelik yönetimi
+- ✅ Etiket sistemi
+- ✅ Arama ve filtreleme
+- ✅ Hata yönetimi ve loading durumları
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+## Kurulum
 
-## Deployment
+### 1. Veritabanı Kurulumu
+\`\`\`sql
+-- database.sql dosyasını MySQL'de çalıştırın
+\`\`\`
 
-Your project is live at:
+### 2. PHP API Kurulumu
+\`\`\`bash
+# API dosyalarını web sunucunuzun root dizinine kopyalayın
+# Örnek: /var/www/html/project-manager/api/
+\`\`\`
 
-**[https://vercel.com/nova1104alia-gmailcoms-projects/v0-desktop-uygulama-tasarlama](https://vercel.com/nova1104alia-gmailcoms-projects/v0-desktop-uygulama-tasarlama)**
+### 3. API Yapılandırması
+`api/config.php` dosyasında veritabanı bilgilerinizi güncelleyin:
+\`\`\`php
+$host = 'localhost';
+$dbname = 'project_manager';
+$username = 'your_username';
+$password = 'your_password';
+\`\`\`
 
-## Build your app
+### 4. Web Uygulaması
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
 
-Continue building your app on:
+## Masaüstü Uygulaması İçin
 
-**[https://v0.dev/chat/projects/JbQhSvRjUg5](https://v0.dev/chat/projects/JbQhSvRjUg5)**
+Bu web uygulamasını masaüstü uygulamasına dönüştürmek için Electron kullanabilirsiniz:
 
-## How It Works
+### Electron Kurulumu
+\`\`\`bash
+npm install electron electron-builder --save-dev
+\`\`\`
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+### package.json'a ekleyin:
+\`\`\`json
+{
+  "main": "electron/main.js",
+  "scripts": {
+    "electron": "electron .",
+    "electron-dev": "ELECTRON_IS_DEV=1 electron .",
+    "build-electron": "electron-builder"
+  }
+}
+\`\`\`
+
+### electron/main.js oluşturun:
+\`\`\`javascript
+const { app, BrowserWindow } = require('electron');
+const path = require('path');
+
+function createWindow() {
+  const mainWindow = new BrowserWindow({
+    width: 1200,
+    height: 800,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+  });
+
+  const isDev = process.env.ELECTRON_IS_DEV === '1';
+  
+  if (isDev) {
+    mainWindow.loadURL('http://localhost:3000');
+    mainWindow.webContents.openDevTools();
+  } else {
+    mainWindow.loadFile('out/index.html');
+  }
+}
+
+app.whenReady().then(createWindow);
+\`\`\`
+
+## API Endpoints
+
+- `GET /api/projects.php` - Tüm projeleri getir
+- `GET /api/projects.php?id=1` - Tek proje getir
+- `POST /api/projects.php` - Yeni proje oluştur
+- `PUT /api/projects.php?id=1` - Projeyi güncelle
+- `DELETE /api/projects.php?id=1` - Projeyi sil
+
+## Teknolojiler
+
+- **Frontend:** Next.js, React, TypeScript, Tailwind CSS
+- **Backend:** PHP, MySQL
+- **UI Kütüphanesi:** shadcn/ui
+- **Masaüstü:** Electron (opsiyonel)
